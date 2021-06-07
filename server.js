@@ -15,7 +15,7 @@ const path = require('path');
 const fs = require('fs');
 
 const channelName = 'mychannel';
-const chaincodeName = 'fabcar';
+const chaincodeName = 'nexledger';
 const adminUserId = 'admin';
 const adminUserPasswd = 'adminpw';
 const mspOrg1 = 'Org1MSP';
@@ -60,6 +60,9 @@ app.get('/changeowner', function (req, res) {
 // Change car owner page
 app.get('/deletecar', function (req, res) {
     res.render('deletecar', { title: "Delete Car", activate: "deletecar" });
+});
+app.get('/pushcar', function (req, res) {
+    res.render('pushcar', { title: "Push Car", activate: "pushcar" });
 });
 
 app.post('/api/initledger/', async function (req, res) {
@@ -200,7 +203,7 @@ app.post('/api/querycar', async function (req, res) {
         var id = req.body.id;
         var make = req.body.make;
         var model = req.body.model;
-        var colour = req.body.colour;
+        var count = req.body.count;
         var owner = req.body.owner;
         
  
@@ -216,8 +219,8 @@ app.post('/api/querycar', async function (req, res) {
         if (model != ""){
             queryStringObject.selector.model = model;
         }
-        if (colour != ""){
-            queryStringObject.selector.colour = colour;
+        if (count != ""){
+            queryStringObject.selector.count = count;
         }
         if (owner != ""){
             queryStringObject.selector.owner = owner;
@@ -296,7 +299,7 @@ app.post('/api/addcar/', async function (req, res) {
         var id = req.body.id;
         var make = req.body.make;
         var model = req.body.model;
-        var colour = req.body.colour;
+        var count = req.body.count;
         var owner = req.body.owner;
 
         // Build an in memory object with the network configuration (also known as a connection profile).
@@ -351,8 +354,8 @@ app.post('/api/addcar/', async function (req, res) {
         // Now let's try to submit a transaction.
 		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
 		// to the orderer to be committed by each of the peer's to the channel ledger.
-		console.log('=> Submit Transaction: AddCar, adds new car with id, make, model, colour, and owner arguments');
-		await contract.submitTransaction('AddCar', id, make, model, colour, owner);        
+		console.log('=> Submit Transaction: AddCar, adds new car with id, make, model, count, and owner arguments');
+		await contract.submitTransaction('AddCar', id, make, model, count, owner);        
         console.log('=> Transaction has been submitted');
         await gateway.disconnect();
         res.status(200).json({response: 'Transaction has been submitted', status: 200});
@@ -575,6 +578,169 @@ app.post('/api/deletecar/', async function (req, res) {
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
             console.log(`=> Submit Transaction: deleteCar ${id}`);
             await contract.submitTransaction('DeleteCar', id);
+            console.log(`=> Transaction has been submitted`);
+        } catch (error) {
+            console.log(`=> Error. ${id} may not exist.`);
+            //res.status(400).json(error);
+            res.status(400).json({response: 'Transaction failed'})
+        }
+        
+        await gateway.disconnect();
+        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        //res.status(400).json(error);
+        res.status(400).json({response: 'Transaction failed'});
+    }   
+});
+
+app.post('/api/pushcar/', async function (req, res) {
+    try {
+        var id = req.body.carid;
+				var count = req.body.count;
+        console.log(id);
+				console.log(count);
+
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }        
+
+        // Check to see if we've already enrolled the user.
+	    const userIdentity = await wallet.get(org1UserId);
+	    if (!userIdentity) {
+		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+		    return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract(chaincodeName);
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try to submit a transaction.
+		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+        
+        try {
+            // How about we try a transactions where the executing chaincode throws an error.
+            // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
+            console.log(`=> Submit Transaction: pushCar ${id} ${count}`);
+            await contract.submitTransaction('PushCar', id, count);
+            console.log(`=> Transaction has been submitted`);
+        } catch (error) {
+            console.log(`=> Error. ${id} may not exist.`);
+            //res.status(400).json(error);
+            res.status(400).json({response: 'Transaction failed'})
+        }
+        
+        await gateway.disconnect();
+        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        //res.status(400).json(error);
+        res.status(400).json({response: 'Transaction failed'});
+    }   
+});
+app.post('/api/popcar/', async function (req, res) {
+    try {
+        var id = req.body.carid;
+				var count = req.body.count;
+        console.log(id);
+				console.log(count);
+
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }        
+
+        // Check to see if we've already enrolled the user.
+	    const userIdentity = await wallet.get(org1UserId);
+	    if (!userIdentity) {
+		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+		    return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract(chaincodeName);
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try to submit a transaction.
+		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+        
+        try {
+            // How about we try a transactions where the executing chaincode throws an error.
+            // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
+            console.log(`=> Submit Transaction: popCar ${id} ${count}`);
+            await contract.submitTransaction('PopCar', id, count);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);

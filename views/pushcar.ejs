@@ -9,7 +9,7 @@
   <div class="container">
     <i class="fas fa-trash"></i>
     <h1>Welcome!</h1>
-    <p>delete car</p>
+    <p>push car</p>
     <%- include('partials/navbar') %>
 
 
@@ -26,7 +26,8 @@
             <th>Model</th>
             <th>Count</th>
             <th>Owner</th>
-            <th>Remove</th>
+            <th>Push</th>
+            <th>Pop</th>
           </tr>
         </thead>
         <tbody id="tableContent">
@@ -53,7 +54,8 @@
         html += '<td>' + data[i].model + ' </td>';
         html += '<td>' + data[i].count + ' </td>';
         html += '<td>' + data[i].owner + ' </td>';
-        html += '<td>  <img src="delete.png" width = 15 onclick="deleteCar(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+        html += '<td>  <img src="delete.png" width = 15 onclick="pushCar(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+        html += '<td>  <img src="delete.png" width = 15 onclick="popCar(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
         html += '</tr>';
 
       }
@@ -67,10 +69,26 @@
 
 
   });
-  function deleteCar(carID) {
+  function pushCar(carID, count) {
 
-    $.post("./api/deletecar", {
-      carid: carID
+    $.post("./api/pushcar", {
+      carid: carID,
+			count: count
+    },
+      function (data, status) {
+        if (data.status == 200) {
+          alert(data.response);
+        }
+        queryAllcars();
+
+      });
+
+  }
+  function popCar(carID, count) {
+
+    $.post("./api/popcar", {
+      carid: carID,
+			count: count
     },
       function (data, status) {
         if (data.status == 200) {

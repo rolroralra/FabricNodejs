@@ -6,6 +6,7 @@
         <li role="presentation"><a href="./querycar">Query a car</a></li>
         <li role="presentation"><a href="./changeowner">Change owner</a></li>
         <li role="presentation"><a href="./deletecar">Delete car</a></li>
+        <li role="presentation"><a href="./pushcar">Push car</a></li>
     </ul>
     <% }else if(activate=="queryallcars" ){ %>
         <ul class="nav nav-tabs">
@@ -15,6 +16,7 @@
             <li role="presentation"><a href="./querycar">Query a car</a></li>
             <li role="presentation"><a href="./changeowner">Change owner</a></li>
             <li role="presentation"><a href="./deletecar">Delete car</a></li>
+        		<li role="presentation"><a href="./pushcar">Push car</a></li>
         </ul>
         <% }else if(activate=="addcar" ){ %>
             <ul class="nav nav-tabs">
@@ -24,6 +26,7 @@
                 <li role="presentation"><a href="./querycar">Query a car</a></li>
                 <li role="presentation"><a href="./changeowner">Change owner</a></li>
                 <li role="presentation"><a href="./deletecar">Delete car</a></li>
+        				<li role="presentation"><a href="./pushcar">Push car</a></li>
             </ul>
             <% }else if(activate=="querycar" ){ %>
                 <ul class="nav nav-tabs">
@@ -33,6 +36,7 @@
                     <li role="presentation" class="active"><a href="#">Query a car</a></li>
                     <li role="presentation"><a href="./changeowner">Change owner</a></li>
                     <li role="presentation"><a href="./deletecar">Delete car</a></li>
+        						<li role="presentation"><a href="./pushcar">Push car</a></li>
                 </ul>
                 <% }else if(activate=="deletecar" ){ %>
                     <ul class="nav nav-tabs">
@@ -42,7 +46,18 @@
                         <li role="presentation"><a href="./querycar">Query a car</a></li>
                         <li role="presentation"><a href="./changeowner">Change owner</a></li>
                         <li role="presentation" class="active"><a href="#">Delete car</a></li>
-                    </ul>
+        								<li role="presentation"><a href="./pushcar">Push car</a></li>
+										</ul>
+									<% }else if(activate=="pushcar" ){ %>
+											<ul class="nav nav-tabs">
+													<li role="presentation"><a href="./">Home</a></li>
+													<li role="presentation"><a href="./queryallcars">Query all cars</a></li>
+													<li role="presentation"><a href="./addcar">Add a car</a></li>
+													<li role="presentation"><a href="./querycar">Query a car</a></li>
+													<li role="presentation"><a href="./changeowner">Change owner</a></li>
+                    			<li role="presentation"><a href="./deletecar">Delete car</a></li>
+													<li role="presentation" class="active"><a href="#">Delete car</a></li>
+											</ul>
                     <% }else{ %>
                         <ul class="nav nav-tabs">
                             <li role="presentation"><a href="./">Home</a></li>
@@ -51,5 +66,6 @@
                             <li role="presentation"><a href="./querycar">Query a car</a></li>
                             <li role="presentation" class="active"><a href="#">Change owner</a></li>
                             <li role="presentation"><a href="./deletecar">Delete car</a></li>
+        										<li role="presentation"><a href="./pushcar">Push car</a></li>
                         </ul>
                         <% } %>

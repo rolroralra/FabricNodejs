@@ -17,7 +17,7 @@
       Maker <input type="text" name="make" /> <br>
       Model <input type="text" name="model" /> <br>
       Owner <input type="text" name="owner" /> <br>
-      Colour <input type="text" name="colour" /> <br>
+      Count <input type="text" name="count" /> <br>
       <button class="btn btn-info">Submit</button>
 
       <div id="fabcarhead">
@@ -30,7 +30,7 @@
             <th>CarID</th>
             <th>Make</th>
             <th>Model</th>
-            <th>Colour</th>
+            <th>Count</th>
             <th>Owner</th>
           </tr>
         </thead>
@@ -48,7 +48,7 @@
     var make = $('input[name=make]').val();
     var model = $('input[name=model]').val();
     var owner = $('input[name=owner]').val();
-    var colour = $('input[name=colour]').val();
+    var count = $('input[name=count]').val();
 
 
     $.post("./api/querycar", {
@@ -56,7 +56,7 @@
       make: make,
       model: model,
       owner: owner,
-      colour: colour,
+      count: count,
     }, function (data, status) {
       html = '';
       if (data.response == "empty result") {
@@ -73,7 +73,7 @@
         html += '<td>' + data[i].ID + ' </td>';
         html += '<td>' + data[i].make + ' </td>';
         html += '<td>' + data[i].model + ' </td>';
-        html += '<td>' + data[i].colour + ' </td>';
+        html += '<td>' + data[i].count + ' </td>';
         html += '<td>' + data[i].owner + ' </td>';
         html += '</tr>';
 
