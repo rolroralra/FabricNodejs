@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('partials/head') %>
+</head>
+
+<body>
+  <div class="container">
+    <i class="fas fa-user-check"></i>
+    <h1>ChangeOwner Page</h1>
+    <p>Owner change!</p>
+    <%- include('partials/navbar') %>
+
+
+      CarID <input type="text" name="id" /> <br>
+      Owner <input type="text" name="owner" /> <br>
+      <button class="btn btn-info">Submit</button>
+
+  </div>
+</body>
+<script>
+
+  $("button").click(function () {
+    var carid = $('input[name=id]').val();
+    var owner = $('input[name=owner]').val();
+
+
+    $.post("./api/changeowner", {
+      id: carid,
+      owner: owner
+    }, function (data, status) {
+      if (data.status == 200) {
+        alert(data.response);
+      }
+
+    });
+  });
+</script>
+
+</html>

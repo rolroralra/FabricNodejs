@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include('partials/head') %>
+</head>
+
+<body>
+  <div class="container">
+    <i class="fas fa-book-reader"></i>
+    <h1>Welcome!</h1>
+    <p>Query All Cars</p>
+    <%- include('partials/navbar') %>
+
+      <button class="btn btn-info">Query All Cars</button>
+
+      <div id="fabcarhead">
+        <h2>Fabcar Query Result</h2>
+      </div>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>CarID</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Colour</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody id="tableContent">
+
+        </tbody>
+      </table>
+      <div id="historyhead">
+        <h2 id="historyheadcontent">Fabcar Query Result for key</h2>
+      </div>
+      <table class="styled-detail-table" id="tableDetail">
+        <thead>
+          <tr>
+            <th>CarID</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Colour</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody id="tableDetailContent">
+
+        </tbody>
+      </table>
+  </div>
+</body>
+
+</html>
+
+<script>
+
+  $(document).ready(function () {
+
+    $("#historyhead").hide();
+    $("#tableDetail").hide();
+    // $("#head").hide();
+    $("button").click(function () {
+      $("#fabcarhead").show();
+      $.get("./api/queryallcars", function (data, status) {
+
+        html = '';
+
+
+        for (var i = 0; i < data.length; i++) {
+
+          html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+          html += '<td>' + data[i].ID + ' </td>';
+          html += '<td>' + data[i].make + ' </td>';
+          html += '<td>' + data[i].model + ' </td>';
+          html += '<td>' + data[i].colour + ' </td>';
+          html += '<td>' + data[i].owner + ' </td>';
+          html += '</tr>';
+
+        }
+        $('#tableContent').html(html);
+      });
+    });
+
+
+  });
+  function queryKeyHistory(carID) {
+
+    $("#historyhead").show();
+    $("#tableDetail").show();
+    $.post("./api/queryhistorycars", {
+      carid: carID
+    },
+      function (data, status) {
+        $('#historyheadcontent').text(carID + " History Query Result");
+        html = '';
+
+        for (var i = 0; i < data.length; i++) {
+
+          html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+          if (i == 0) {
+            html += '<td rowspan=' + data.length + '>' + data[i].ID + ' </td>';
+          }
+          if (data[i].make == "delete") {
+            html += '<td colspan="4">' + data[i].make + ' </td>';
+          }
+          else {
+            html += '<td>' + data[i].make + ' </td>';
+            html += '<td>' + data[i].model + ' </td>';
+            html += '<td>' + data[i].colour + ' </td>';
+            html += '<td>' + data[i].owner + ' </td>';
+            html += '</tr>';
+          }
+
+
+        }
+        $('#tableDetailContent').html(html);
+      });
+  }
+</script>
