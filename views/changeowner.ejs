@@ -13,7 +13,7 @@
     <%- include('partials/navbar') %>
 
 
-      CarID <input type="text" name="id" /> <br>
+      StockID <input type="text" name="id" /> <br>
       Owner <input type="text" name="owner" /> <br>
       <button class="btn btn-info">Submit</button>
 
@@ -22,12 +22,12 @@
 <script>
 
   $("button").click(function () {
-    var carid = $('input[name=id]').val();
+    var stockid = $('input[name=id]').val();
     var owner = $('input[name=owner]').val();
 
 
     $.post("./api/changeowner", {
-      id: carid,
+      id: stockid,
       owner: owner
     }, function (data, status) {
       if (data.status == 200) {

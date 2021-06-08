@@ -8,26 +8,26 @@
 <body>
   <div class="container">
     <i class="fas fa-book-reader"></i>
-    <h1>QueryCar Page</h1>
-    <p>Query car!</p>
+    <h1>QueryStock Page</h1>
+    <p>Query stock!</p>
     <%- include('partials/navbar') %>
 
 
-      CarID <input type="text" name="id" /> <br>
+      StockID <input type="text" name="id" /> <br>
       Maker <input type="text" name="make" /> <br>
       Model <input type="text" name="model" /> <br>
       Owner <input type="text" name="owner" /> <br>
       Count <input type="text" name="count" /> <br>
       <button class="btn btn-info">Submit</button>
 
-      <div id="fabcarhead">
-        <h2>Fabcar Query Result</h2>
+      <div id="fabstockhead">
+        <h2>Fabstock Query Result</h2>
       </div>
 
       <table class="styled-table">
         <thead>
           <tr>
-            <th>CarID</th>
+            <th>StockID</th>
             <th>Make</th>
             <th>Model</th>
             <th>Count</th>
@@ -44,15 +44,15 @@
 <script>
 
   $("button").click(function () {
-    var carid = $('input[name=id]').val();
+    var stockid = $('input[name=id]').val();
     var make = $('input[name=make]').val();
     var model = $('input[name=model]').val();
     var owner = $('input[name=owner]').val();
     var count = $('input[name=count]').val();
 
 
-    $.post("./api/querycar", {
-      id: carid,
+    $.post("./api/querystock", {
+      id: stockid,
       make: make,
       model: model,
       owner: owner,

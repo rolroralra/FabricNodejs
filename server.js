@@ -38,31 +38,31 @@ app.get('/', function (req, res) {
     res.render('index', { title: "Main Page", activate: "index"});
 });
 
-// Qeury all cars page
-app.get('/queryallcars', function (req, res) {
-    res.render('queryallcars', { title: "Query", activate: "queryallcars" });
+// Qeury all stocks page
+app.get('/queryallstocks', function (req, res) {
+    res.render('queryallstocks', { title: "Query", activate: "queryallstocks" });
 });
 
-// Add car page
-app.get('/addcar', function (req, res) {
-    res.render('addcar', { title: "Add Car", activate: "addcar"  });
+// Add stock page
+app.get('/addstock', function (req, res) {
+    res.render('addstock', { title: "Add Stock", activate: "addstock"  });
 });
 
-// Query car page
-app.get('/querycar', function (req, res) {
-    res.render('querycar', { title: "Query Car", activate: "querycar"  });
+// Query stock page
+app.get('/querystock', function (req, res) {
+    res.render('querystock', { title: "Query Stock", activate: "querystock"  });
 });
 
-// Change car owner page
+// Change stock owner page
 app.get('/changeowner', function (req, res) {
     res.render('changeowner', { title: "Change Owner", activate: "changeowner" });
 });
-// Change car owner page
-app.get('/deletecar', function (req, res) {
-    res.render('deletecar', { title: "Delete Car", activate: "deletecar" });
+// Change stock owner page
+app.get('/deletestock', function (req, res) {
+    res.render('deletestock', { title: "Delete Stock", activate: "deletestock" });
 });
-app.get('/pushcar', function (req, res) {
-    res.render('pushcar', { title: "Push Car", activate: "pushcar" });
+app.get('/pushstock', function (req, res) {
+    res.render('pushstock', { title: "Push Stock", activate: "pushstock" });
 });
 
 app.post('/api/initledger/', async function (req, res) {
@@ -132,7 +132,7 @@ app.post('/api/initledger/', async function (req, res) {
 
 });
 
-app.get('/api/queryallcars', async function (req, res) {
+app.get('/api/queryallstocks', async function (req, res) {
     try {
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -185,8 +185,8 @@ app.get('/api/queryallcars', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log('=> Evaluate Transaction: QueryAllCars, function returns all the current assets on the ledger');
-        const result = await contract.evaluateTransaction('QueryAllCars');        
+        console.log('=> Evaluate Transaction: QueryAllStocks, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('QueryAllStocks');        
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
         
         var obj = JSON.parse(result)
@@ -197,7 +197,7 @@ app.get('/api/queryallcars', async function (req, res) {
     }
 });
 
-app.post('/api/querycar', async function (req, res) {
+app.post('/api/querystock', async function (req, res) {
     try {
 
         var id = req.body.id;
@@ -279,8 +279,8 @@ app.post('/api/querycar', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log(`=> Evaluate Transaction: QueryCar, function returns the attributes`);
-        const result = await contract.evaluateTransaction('QueryCarCouchDB', queryString);
+        console.log(`=> Evaluate Transaction: QueryStock, function returns the attributes`);
+        const result = await contract.evaluateTransaction('QueryStockCouchDB', queryString);
         if (result.toString() == ''){
             res.json({response: "empty result"})
         }
@@ -294,7 +294,7 @@ app.post('/api/querycar', async function (req, res) {
     }
 });
 
-app.post('/api/addcar/', async function (req, res) {
+app.post('/api/addstock/', async function (req, res) {
     try {
         var id = req.body.id;
         var make = req.body.make;
@@ -354,8 +354,8 @@ app.post('/api/addcar/', async function (req, res) {
         // Now let's try to submit a transaction.
 		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
 		// to the orderer to be committed by each of the peer's to the channel ledger.
-		console.log('=> Submit Transaction: AddCar, adds new car with id, make, model, count, and owner arguments');
-		await contract.submitTransaction('AddCar', id, make, model, count, owner);        
+		console.log('=> Submit Transaction: AddStock, adds new stock with id, make, model, count, and owner arguments');
+		await contract.submitTransaction('AddStock', id, make, model, count, owner);        
         console.log('=> Transaction has been submitted');
         await gateway.disconnect();
         res.status(200).json({response: 'Transaction has been submitted', status: 200});
@@ -446,9 +446,9 @@ app.post('/api/changeowner/', async function (req, res) {
         res.status(400).json({response: 'Transaction failed'});
     }   
 });
-app.post('/api/queryhistorycars', async function (req, res) {
+app.post('/api/queryhistorystocks', async function (req, res) {
     
-    var id = req.body.carid;
+    var id = req.body.stockid;
     
     try {
         // Build an in memory object with the network configuration (also known as a connection profile).
@@ -502,8 +502,8 @@ app.post('/api/queryhistorycars', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log('=> Evaluate Transaction: QueryAllCars, function returns all the current assets on the ledger');
-        const result = await contract.evaluateTransaction('queryHistoryCars', id);        
+        console.log('=> Evaluate Transaction: QueryAllStocks, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('queryHistoryStocks', id);        
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
         
         var obj = JSON.parse(result)
@@ -515,9 +515,9 @@ app.post('/api/queryhistorycars', async function (req, res) {
     }
 });
 
-app.post('/api/deletecar/', async function (req, res) {
+app.post('/api/deletestock/', async function (req, res) {
     try {
-        var id = req.body.carid;
+        var id = req.body.stockid;
         console.log(id);
 
         // Build an in memory object with the network configuration (also known as a connection profile).
@@ -576,8 +576,8 @@ app.post('/api/deletecar/', async function (req, res) {
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: deleteCar ${id}`);
-            await contract.submitTransaction('DeleteCar', id);
+            console.log(`=> Submit Transaction: deleteStock ${id}`);
+            await contract.submitTransaction('DeleteStock', id);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
@@ -595,9 +595,9 @@ app.post('/api/deletecar/', async function (req, res) {
     }   
 });
 
-app.post('/api/pushcar/', async function (req, res) {
+app.post('/api/pushstock/', async function (req, res) {
     try {
-        var id = req.body.carid;
+        var id = req.body.stockid;
 				var count = req.body.count;
         console.log(id);
 				console.log(count);
@@ -658,8 +658,8 @@ app.post('/api/pushcar/', async function (req, res) {
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: pushCar ${id} ${count}`);
-            await contract.submitTransaction('PushCar', id, count);
+            console.log(`=> Submit Transaction: pushStock ${id} ${count}`);
+            await contract.submitTransaction('PushStock', id, count);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
@@ -676,9 +676,9 @@ app.post('/api/pushcar/', async function (req, res) {
         res.status(400).json({response: 'Transaction failed'});
     }   
 });
-app.post('/api/popcar/', async function (req, res) {
+app.post('/api/popstock/', async function (req, res) {
     try {
-        var id = req.body.carid;
+        var id = req.body.stockid;
 				var count = req.body.count;
         console.log(id);
 				console.log(count);
@@ -739,8 +739,8 @@ app.post('/api/popcar/', async function (req, res) {
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: popCar ${id} ${count}`);
-            await contract.submitTransaction('PopCar', id, count);
+            console.log(`=> Submit Transaction: popStock ${id} ${count}`);
+            await contract.submitTransaction('PopStock', id, count);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);

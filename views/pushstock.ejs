@@ -9,24 +9,25 @@
   <div class="container">
     <i class="fas fa-trash"></i>
     <h1>Welcome!</h1>
-    <p>delete car</p>
+    <p>push stock</p>
     <%- include('partials/navbar') %>
 
 
 
       <div id="head">
-        <h2>Delete Car</h2>
+        <h2>Delete Stock</h2>
       </div>
 
       <table class="styled-table">
         <thead>
           <tr>
-            <th>CarID</th>
+            <th>StockID</th>
             <th>Make</th>
             <th>Model</th>
             <th>Count</th>
             <th>Owner</th>
-            <th>Remove</th>
+            <th>Push</th>
+            <th>Pop</th>
           </tr>
         </thead>
         <tbody id="tableContent">
@@ -39,8 +40,8 @@
 </html>
 
 <script>
-  function queryAllcars() {
-    $.get("./api/queryallcars", function (data, status) {
+  function queryAllstocks() {
+    $.get("./api/queryallstocks", function (data, status) {
 
       html = '';
 
@@ -53,7 +54,8 @@
         html += '<td>' + data[i].model + ' </td>';
         html += '<td>' + data[i].count + ' </td>';
         html += '<td>' + data[i].owner + ' </td>';
-        html += '<td>  <img src="delete.png" width = 15 onclick="deleteCar(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+        html += '<td>  <img src="delete.png" width = 15 onclick="pushStock(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+        html += '<td>  <img src="delete.png" width = 15 onclick="popStock(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
         html += '</tr>';
 
       }
@@ -62,21 +64,37 @@
   }
   $(document).ready(function () {
 
-    queryAllcars();
+    queryAllstocks();
 
 
 
   });
-  function deleteCar(carID) {
+  function pushStock(stockID, count) {
 
-    $.post("./api/deletecar", {
-      carid: carID
+    $.post("./api/pushstock", {
+      stockid: stockID,
+			count: count
     },
       function (data, status) {
         if (data.status == 200) {
           alert(data.response);
         }
-        queryAllcars();
+        queryAllstocks();
+
+      });
+
+  }
+  function popStock(stockID, count) {
+
+    $.post("./api/popstock", {
+      stockid: stockID,
+			count: count
+    },
+      function (data, status) {
+        if (data.status == 200) {
+          alert(data.response);
+        }
+        queryAllstocks();
 
       });
 

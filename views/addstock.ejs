@@ -7,13 +7,13 @@
 
 <body>
   <div class="container">
-    <i class="fas fa-car"></i>
-    <h1>AddCar Page</h1>
-    <p>Add car</p>
+    <i class="fas fa-stock"></i>
+    <h1>AddStock Page</h1>
+    <p>Add stock</p>
     <%- include('partials/navbar') %>
 
 
-      CarID <input type="text" name="id" /> <br>
+      StockID <input type="text" name="id" /> <br>
       Maker <input type="text" name="make" /> <br>
       Model <input type="text" name="model" /> <br>
       Owner <input type="text" name="owner" /> <br>
@@ -25,15 +25,15 @@
 <script>
 
   $("button").click(function () {
-    var carid = $('input[name=id]').val();
+    var stockid = $('input[name=id]').val();
     var make = $('input[name=make]').val();
     var model = $('input[name=model]').val();
     var owner = $('input[name=owner]').val();
     var count = $('input[name=count]').val();
 
 
-    $.post("./api/addcar", {
-      id: carid,
+    $.post("./api/addstock", {
+      id: stockid,
       make: make,
       model: model,
       owner: owner,

@@ -9,19 +9,19 @@
   <div class="container">
     <i class="fas fa-book-reader"></i>
     <h1>Welcome!</h1>
-    <p>Query All Cars</p>
+    <p>Query All Stocks</p>
     <%- include('partials/navbar') %>
 
-      <button class="btn btn-info">Query All Cars</button>
+      <button class="btn btn-info">Query All Stocks</button>
 
-      <div id="fabcarhead">
-        <h2>Fabcar Query Result</h2>
+      <div id="fabstockhead">
+        <h2>Fabstock Query Result</h2>
       </div>
 
       <table class="styled-table">
         <thead>
           <tr>
-            <th>CarID</th>
+            <th>StockID</th>
             <th>Make</th>
             <th>Model</th>
             <th>Count</th>
@@ -33,12 +33,12 @@
         </tbody>
       </table>
       <div id="historyhead">
-        <h2 id="historyheadcontent">Fabcar Query Result for key</h2>
+        <h2 id="historyheadcontent">Fabstock Query Result for key</h2>
       </div>
       <table class="styled-detail-table" id="tableDetail">
         <thead>
           <tr>
-            <th>CarID</th>
+            <th>StockID</th>
             <th>Make</th>
             <th>Model</th>
             <th>Count</th>
@@ -62,8 +62,8 @@
     $("#tableDetail").hide();
     // $("#head").hide();
     $("button").click(function () {
-      $("#fabcarhead").show();
-      $.get("./api/queryallcars", function (data, status) {
+      $("#fabstockhead").show();
+      $.get("./api/queryallstocks", function (data, status) {
 
         html = '';
 
@@ -85,15 +85,15 @@
 
 
   });
-  function queryKeyHistory(carID) {
+  function queryKeyHistory(stockID) {
 
     $("#historyhead").show();
     $("#tableDetail").show();
-    $.post("./api/queryhistorycars", {
-      carid: carID
+    $.post("./api/queryhistorystocks", {
+      stockid: stockID
     },
       function (data, status) {
-        $('#historyheadcontent').text(carID + " History Query Result");
+        $('#historyheadcontent').text(stockID + " History Query Result");
         html = '';
 
         for (var i = 0; i < data.length; i++) {

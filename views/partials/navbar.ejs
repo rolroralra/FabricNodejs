@@ -1,71 +1,71 @@
 <% if(activate=="index" ){ %>
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="./">Home</a></li>
-        <li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-        <li role="presentation"><a href="./addcar">Add a car</a></li>
-        <li role="presentation"><a href="./querycar">Query a car</a></li>
+        <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+        <li role="presentation"><a href="./addstock">Add a stock</a></li>
+        <li role="presentation"><a href="./querystock">Query a stock</a></li>
         <li role="presentation"><a href="./changeowner">Change owner</a></li>
-        <li role="presentation"><a href="./deletecar">Delete car</a></li>
-        <li role="presentation"><a href="./pushcar">Push car</a></li>
+        <li role="presentation"><a href="./deletestock">Delete stock</a></li>
+        <li role="presentation"><a href="./pushstock">Push stock</a></li>
     </ul>
-    <% }else if(activate=="queryallcars" ){ %>
+    <% }else if(activate=="queryallstocks" ){ %>
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="./">Home</a></li>
-            <li role="presentation" class="active"><a href="#">Query all cars</a></li>
-            <li role="presentation"><a href="./addcar">Add a car</a></li>
-            <li role="presentation"><a href="./querycar">Query a car</a></li>
+            <li role="presentation" class="active"><a href="#">Query all stocks</a></li>
+            <li role="presentation"><a href="./addstock">Add a stock</a></li>
+            <li role="presentation"><a href="./querystock">Query a stock</a></li>
             <li role="presentation"><a href="./changeowner">Change owner</a></li>
-            <li role="presentation"><a href="./deletecar">Delete car</a></li>
-        		<li role="presentation"><a href="./pushcar">Push car</a></li>
+            <li role="presentation"><a href="./deletestock">Delete stock</a></li>
+        		<li role="presentation"><a href="./pushstock">Push stock</a></li>
         </ul>
-        <% }else if(activate=="addcar" ){ %>
+        <% }else if(activate=="addstock" ){ %>
             <ul class="nav nav-tabs">
                 <li role="presentation"><a href="./">Home</a></li>
-                <li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-                <li role="presentation" class="active"><a href="#">Add a car</a></li>
-                <li role="presentation"><a href="./querycar">Query a car</a></li>
+                <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+                <li role="presentation" class="active"><a href="#">Add a stock</a></li>
+                <li role="presentation"><a href="./querystock">Query a stock</a></li>
                 <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                <li role="presentation"><a href="./deletecar">Delete car</a></li>
-        				<li role="presentation"><a href="./pushcar">Push car</a></li>
+                <li role="presentation"><a href="./deletestock">Delete stock</a></li>
+        				<li role="presentation"><a href="./pushstock">Push stock</a></li>
             </ul>
-            <% }else if(activate=="querycar" ){ %>
+            <% }else if(activate=="querystock" ){ %>
                 <ul class="nav nav-tabs">
                     <li role="presentation"><a href="./">Home</a></li>
-                    <li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-                    <li role="presentation"><a href="./addcar">Add a car</a></li>
-                    <li role="presentation" class="active"><a href="#">Query a car</a></li>
+                    <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+                    <li role="presentation"><a href="./addstock">Add a stock</a></li>
+                    <li role="presentation" class="active"><a href="#">Query a stock</a></li>
                     <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                    <li role="presentation"><a href="./deletecar">Delete car</a></li>
-        						<li role="presentation"><a href="./pushcar">Push car</a></li>
+                    <li role="presentation"><a href="./deletestock">Delete stock</a></li>
+        						<li role="presentation"><a href="./pushstock">Push stock</a></li>
                 </ul>
-                <% }else if(activate=="deletecar" ){ %>
+                <% }else if(activate=="deletestock" ){ %>
                     <ul class="nav nav-tabs">
                         <li role="presentation"><a href="./">Home</a></li>
-                        <li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-                        <li role="presentation"><a href="./addcar">Add a car</a></li>
-                        <li role="presentation"><a href="./querycar">Query a car</a></li>
+                        <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+                        <li role="presentation"><a href="./addstock">Add a stock</a></li>
+                        <li role="presentation"><a href="./querystock">Query a stock</a></li>
                         <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                        <li role="presentation" class="active"><a href="#">Delete car</a></li>
-        								<li role="presentation"><a href="./pushcar">Push car</a></li>
+                        <li role="presentation" class="active"><a href="#">Delete stock</a></li>
+        								<li role="presentation"><a href="./pushstock">Push stock</a></li>
 										</ul>
-									<% }else if(activate=="pushcar" ){ %>
+									<% }else if(activate=="pushstock" ){ %>
 											<ul class="nav nav-tabs">
 													<li role="presentation"><a href="./">Home</a></li>
-													<li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-													<li role="presentation"><a href="./addcar">Add a car</a></li>
-													<li role="presentation"><a href="./querycar">Query a car</a></li>
+													<li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+													<li role="presentation"><a href="./addstock">Add a stock</a></li>
+													<li role="presentation"><a href="./querystock">Query a stock</a></li>
 													<li role="presentation"><a href="./changeowner">Change owner</a></li>
-                    			<li role="presentation"><a href="./deletecar">Delete car</a></li>
-													<li role="presentation" class="active"><a href="#">Delete car</a></li>
+                    			<li role="presentation"><a href="./deletestock">Delete stock</a></li>
+													<li role="presentation" class="active"><a href="#">Delete stock</a></li>
 											</ul>
                     <% }else{ %>
                         <ul class="nav nav-tabs">
                             <li role="presentation"><a href="./">Home</a></li>
-                            <li role="presentation"><a href="./queryallcars">Query all cars</a></li>
-                            <li role="presentation"><a href="./addcar">Add a car</a></li>
-                            <li role="presentation"><a href="./querycar">Query a car</a></li>
+                            <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
+                            <li role="presentation"><a href="./addstock">Add a stock</a></li>
+                            <li role="presentation"><a href="./querystock">Query a stock</a></li>
                             <li role="presentation" class="active"><a href="#">Change owner</a></li>
-                            <li role="presentation"><a href="./deletecar">Delete car</a></li>
-        										<li role="presentation"><a href="./pushcar">Push car</a></li>
+                            <li role="presentation"><a href="./deletestock">Delete stock</a></li>
+        										<li role="presentation"><a href="./pushstock">Push stock</a></li>
                         </ul>
                         <% } %>
