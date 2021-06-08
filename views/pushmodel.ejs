@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-trash"></i>
+        <h1>Welcome!</h1>
+        <p>push model</p>
+        <%- include('partials/navbar') %>
+
+
+
+            <div id="head">
+                <h2>Push & Pop Model</h2>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ModelID</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Push</th>
+                        <th>Pop</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+
+                </tbody>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    function queryAllmodels() {
+        $.get("./api/queryallmodels", function(data, status) {
+
+            html = '';
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                html += '<tr>';
+                html += '<td>' + data[i].ID + ' </td>';
+                html += '<td>' + data[i].name + ' </td>';
+                html += '<td>' + data[i].count + ' </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="pushModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="popModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+                html += '</tr>';
+
+            }
+            $('#tableContent').html(html);
+        });
+    }
+    $(document).ready(function() {
+
+        queryAllmodels();
+
+
+
+    });
+
+    function pushModel(modelID, count) {
+
+        $.post("./api/pushmodel", {
+                modelid: modelID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllmodels();
+
+            });
+
+    }
+
+    function popModel(modelID, count) {
+
+        $.post("./api/popmodel", {
+                modelid: modelID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllmodels();
+
+            });
+
+    }
+</script>

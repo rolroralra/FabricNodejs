@@ -15,7 +15,7 @@ const path = require('path');
 const fs = require('fs');
 
 const channelName = 'mychannel';
-const chaincodeName = 'nexledger';
+const chaincodeName = 'model';
 const adminUserId = 'admin';
 const adminUserPasswd = 'adminpw';
 const mspOrg1 = 'Org1MSP';
@@ -23,7 +23,7 @@ const walletPath = path.join(__dirname, 'wallet');
 const org1UserId = 'appUser';
 
 function prettyJSONString(inputString) {
-	return JSON.stringify(JSON.parse(inputString), null, 2);
+    return JSON.stringify(JSON.parse(inputString), null, 2);
 }
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,39 +34,44 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Index page
-app.get('/', function (req, res) {
-    res.render('index', { title: "Main Page", activate: "index"});
+app.get('/', function(req, res) {
+    res.render('index', { title: "Main Page", activate: "index" });
 });
 
-// Qeury all stocks page
-app.get('/queryallstocks', function (req, res) {
-    res.render('queryallstocks', { title: "Query", activate: "queryallstocks" });
+// Qeury all models page
+app.get('/queryallmodels', function(req, res) {
+    res.render('queryallmodels', { title: "Query", activate: "queryallmodels" });
 });
 
-// Add stock page
-app.get('/addstock', function (req, res) {
-    res.render('addstock', { title: "Add Stock", activate: "addstock"  });
+// Qeury all products page
+app.get('/queryallproducts', function(req, res) {
+    res.render('queryallproducts', { title: "Query", activate: "queryallproducts" });
 });
 
-// Query stock page
-app.get('/querystock', function (req, res) {
-    res.render('querystock', { title: "Query Stock", activate: "querystock"  });
+// Add model page
+app.get('/addmodel', function(req, res) {
+    res.render('addmodel', { title: "Add Model", activate: "addmodel" });
 });
 
-// Change stock owner page
-app.get('/changeowner', function (req, res) {
+// Query model page
+app.get('/querymodel', function(req, res) {
+    res.render('querymodel', { title: "Query Model", activate: "querymodel" });
+});
+
+// Change model owner page
+app.get('/changeowner', function(req, res) {
     res.render('changeowner', { title: "Change Owner", activate: "changeowner" });
 });
-// Change stock owner page
-app.get('/deletestock', function (req, res) {
-    res.render('deletestock', { title: "Delete Stock", activate: "deletestock" });
+// Change model owner page
+app.get('/deletemodel', function(req, res) {
+    res.render('deletemodel', { title: "Delete Model", activate: "deletemodel" });
 });
-app.get('/pushstock', function (req, res) {
-    res.render('pushstock', { title: "Push Stock", activate: "pushstock" });
+app.get('/pushmodel', function(req, res) {
+    res.render('pushmodel', { title: "Push Model", activate: "pushmodel" });
 });
 
-app.post('/api/initledger/', async function (req, res) {
-    try {        
+app.post('/api/initledger/', async function(req, res) {
+    try {
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
         const fileExists = fs.existsSync(ccpPath);
@@ -85,13 +90,13 @@ app.post('/api/initledger/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -112,27 +117,29 @@ app.post('/api/initledger/', async function (req, res) {
         console.log('=> Channel obtained');
 
         // Get the contract object from the network.
-        const contract = network.getContract(chaincodeName);
+        // const contract = network.getContract(chaincodeName);
+        const contract = network.getContract(req.body.chaincodeName);
+
         console.log('=> Contract obtained');
 
         // Invoke the chaincode function!!!
         // Now let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
-		// to the orderer to be committed by each of the peer's to the channel ledger.
-		console.log('=> Submit Transaction: InitLedger');
-		await contract.submitTransaction('InitLedger');        
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+        console.log('=> Submit Transaction: InitLedger');
+        await contract.submitTransaction('InitLedger');
         console.log('=> Transaction has been submitted');
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted'});
+        res.status(200).json({ response: 'Transaction has been submitted' });
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         res.status(400).json(error);
-    }   
+    }
 
 });
 
-app.get('/api/queryallstocks', async function (req, res) {
+app.get('/api/queryallmodels', async function(req, res) {
     try {
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -152,13 +159,13 @@ app.get('/api/queryallstocks', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -185,10 +192,10 @@ app.get('/api/queryallstocks', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log('=> Evaluate Transaction: QueryAllStocks, function returns all the current assets on the ledger');
-        const result = await contract.evaluateTransaction('QueryAllStocks');        
+        console.log('=> Evaluate Transaction: QueryAllModels, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('QueryAllModels');
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
-        
+
         var obj = JSON.parse(result)
         res.json(obj)
 
@@ -197,7 +204,7 @@ app.get('/api/queryallstocks', async function (req, res) {
     }
 });
 
-app.post('/api/querystock', async function (req, res) {
+app.post('/api/querymodel', async function(req, res) {
     try {
 
         var id = req.body.id;
@@ -205,26 +212,26 @@ app.post('/api/querystock', async function (req, res) {
         var model = req.body.model;
         var count = req.body.count;
         var owner = req.body.owner;
-        
- 
+
+
         // make queryString
         var queryStringObject = new Object();
         queryStringObject.selector = new Object();
-        if (id != ""){
+        if (id != "") {
             queryStringObject.selector.ID = id;
-        }        
-        if (make != ""){
+        }
+        if (make != "") {
             queryStringObject.selector.make = make;
         }
-        if (model != ""){
+        if (model != "") {
             queryStringObject.selector.model = model;
         }
-        if (count != ""){
+        if (count != "") {
             queryStringObject.selector.count = count;
         }
-        if (owner != ""){
+        if (owner != "") {
             queryStringObject.selector.owner = owner;
-        }                        
+        }
         var queryString = JSON.stringify(queryStringObject)
         console.log(queryString);
         // Build an in memory object with the network configuration (also known as a connection profile).
@@ -245,13 +252,13 @@ app.post('/api/querystock', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -279,28 +286,26 @@ app.post('/api/querystock', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log(`=> Evaluate Transaction: QueryStock, function returns the attributes`);
-        const result = await contract.evaluateTransaction('QueryStockCouchDB', queryString);
-        if (result.toString() == ''){
-            res.json({response: "empty result"})
+        console.log(`=> Evaluate Transaction: QueryModel, function returns the attributes`);
+        const result = await contract.evaluateTransaction('QueryModelCouchDB', queryString);
+        if (result.toString() == '') {
+            res.json({ response: "empty result" })
         }
         console.log(`=> Transaction has been evaluated, result is: ${result.toString()}`);
         var obj = JSON.parse(result)
         res.json(obj)
     } catch (error) {
         console.error(`******** FAILED to run the application: ${error}`);
-        res.status(400).json({response: 'Transaction failed', status: 400});
-        
+        res.status(400).json({ response: 'Transaction failed', status: 400 });
+
     }
 });
 
-app.post('/api/addstock/', async function (req, res) {
+app.post('/api/addmodel/', async function(req, res) {
     try {
         var id = req.body.id;
-        var make = req.body.make;
-        var model = req.body.model;
+        var name = req.body.name;
         var count = req.body.count;
-        var owner = req.body.owner;
 
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -320,13 +325,13 @@ app.post('/api/addstock/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -352,23 +357,23 @@ app.post('/api/addstock/', async function (req, res) {
 
         // Invoke the chaincode function!!!
         // Now let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
-		// to the orderer to be committed by each of the peer's to the channel ledger.
-		console.log('=> Submit Transaction: AddStock, adds new stock with id, make, model, count, and owner arguments');
-		await contract.submitTransaction('AddStock', id, make, model, count, owner);        
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+        console.log('=> Submit Transaction: AddModel, adds new model with id, name, count arguments');
+        await contract.submitTransaction('AddModel', id, name, count);
         console.log('=> Transaction has been submitted');
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted', status: 200});
-        
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
+
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
-        res.status(400).json({response: 'Transaction failed', status: 400});
-    }   
+        res.status(400).json({ response: 'Transaction failed', status: 400 });
+    }
 
 });
 
-app.post('/api/changeowner/', async function (req, res) {
+app.post('/api/changeowner/', async function(req, res) {
     try {
         var id = req.body.id;
         var owner = req.body.owner;
@@ -391,13 +396,13 @@ app.post('/api/changeowner/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -423,9 +428,9 @@ app.post('/api/changeowner/', async function (req, res) {
 
         // Invoke the chaincode function!!!
         // Let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
         // to the orderer to be committed by each of the peer's to the channel ledger.
-        
+
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
@@ -435,21 +440,21 @@ app.post('/api/changeowner/', async function (req, res) {
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
             //res.status(400).json(error);
-            res.status(400).json({response: 'Transaction failed'})
+            res.status(400).json({ response: 'Transaction failed' })
         }
-        
+
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
-        res.status(400).json({response: 'Transaction failed'});
-    }   
+        res.status(400).json({ response: 'Transaction failed' });
+    }
 });
-app.post('/api/queryhistorystocks', async function (req, res) {
-    
-    var id = req.body.stockid;
-    
+app.post('/api/queryhistorymodels', async function(req, res) {
+
+    var id = req.body.modelid;
+
     try {
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -469,13 +474,13 @@ app.post('/api/queryhistorystocks', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -502,10 +507,10 @@ app.post('/api/queryhistorystocks', async function (req, res) {
         // Invoke the chaincode function!!!
         // Let's try a query type operation (function).
         // This will be sent to just one peer and the results will be shown.
-        console.log('=> Evaluate Transaction: QueryAllStocks, function returns all the current assets on the ledger');
-        const result = await contract.evaluateTransaction('queryHistoryStocks', id);        
+        console.log('=> Evaluate Transaction: QueryAllModels, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('queryHistoryModels', id);
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
-        
+
         var obj = JSON.parse(result)
         res.json(obj)
 
@@ -515,9 +520,9 @@ app.post('/api/queryhistorystocks', async function (req, res) {
     }
 });
 
-app.post('/api/deletestock/', async function (req, res) {
+app.post('/api/deletemodel/', async function(req, res) {
     try {
-        var id = req.body.stockid;
+        var id = req.body.modelid;
         console.log(id);
 
         // Build an in memory object with the network configuration (also known as a connection profile).
@@ -538,13 +543,13 @@ app.post('/api/deletestock/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -570,37 +575,37 @@ app.post('/api/deletestock/', async function (req, res) {
 
         // Invoke the chaincode function!!!
         // Let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
         // to the orderer to be committed by each of the peer's to the channel ledger.
-        
+
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: deleteStock ${id}`);
-            await contract.submitTransaction('DeleteStock', id);
+            console.log(`=> Submit Transaction: deleteModel ${id}`);
+            await contract.submitTransaction('DeleteModel', id);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
             //res.status(400).json(error);
-            res.status(400).json({response: 'Transaction failed'})
+            res.status(400).json({ response: 'Transaction failed' })
         }
-        
+
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         //res.status(400).json(error);
-        res.status(400).json({response: 'Transaction failed'});
-    }   
+        res.status(400).json({ response: 'Transaction failed' });
+    }
 });
 
-app.post('/api/pushstock/', async function (req, res) {
+app.post('/api/pushmodel/', async function(req, res) {
     try {
-        var id = req.body.stockid;
-				var count = req.body.count;
+        var id = req.body.modelid;
+        var count = req.body.count;
         console.log(id);
-				console.log(count);
+        console.log(count);
 
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -620,13 +625,13 @@ app.post('/api/pushstock/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -652,36 +657,36 @@ app.post('/api/pushstock/', async function (req, res) {
 
         // Invoke the chaincode function!!!
         // Let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
         // to the orderer to be committed by each of the peer's to the channel ledger.
-        
+
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: pushStock ${id} ${count}`);
-            await contract.submitTransaction('PushStock', id, count);
+            console.log(`=> Submit Transaction: pushModel ${id} ${count}`);
+            await contract.submitTransaction('PushModel', id, count);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
             //res.status(400).json(error);
-            res.status(400).json({response: 'Transaction failed'})
+            res.status(400).json({ response: 'Transaction failed' })
         }
-        
+
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         //res.status(400).json(error);
-        res.status(400).json({response: 'Transaction failed'});
-    }   
+        res.status(400).json({ response: 'Transaction failed' });
+    }
 });
-app.post('/api/popstock/', async function (req, res) {
+app.post('/api/popmodel/', async function(req, res) {
     try {
-        var id = req.body.stockid;
-				var count = req.body.count;
+        var id = req.body.modelid;
+        var count = req.body.count;
         console.log(id);
-				console.log(count);
+        console.log(count);
 
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -701,13 +706,13 @@ app.post('/api/popstock/', async function (req, res) {
         } else {
             wallet = await Wallets.newInMemoryWallet();
             console.log('=> Found the in-memory wallet');
-        }        
+        }
 
         // Check to see if we've already enrolled the user.
-	    const userIdentity = await wallet.get(org1UserId);
-	    if (!userIdentity) {
-		    console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
-		    return;
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
         }
         console.log(`=> The user is ${org1UserId}`);
 
@@ -733,30 +738,245 @@ app.post('/api/popstock/', async function (req, res) {
 
         // Invoke the chaincode function!!!
         // Let's try to submit a transaction.
-		// This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
         // to the orderer to be committed by each of the peer's to the channel ledger.
-        
+
         try {
             // How about we try a transactions where the executing chaincode throws an error.
             // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
-            console.log(`=> Submit Transaction: popStock ${id} ${count}`);
-            await contract.submitTransaction('PopStock', id, count);
+            console.log(`=> Submit Transaction: popModel ${id} ${count}`);
+            await contract.submitTransaction('PopModel', id, count);
             console.log(`=> Transaction has been submitted`);
         } catch (error) {
             console.log(`=> Error. ${id} may not exist.`);
             //res.status(400).json(error);
-            res.status(400).json({response: 'Transaction failed'})
+            res.status(400).json({ response: 'Transaction failed' })
         }
-        
+
         await gateway.disconnect();
-        res.status(200).json({response: 'Transaction has been submitted', status: 200});
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
 
     } catch (error) {
         console.error(`Failed to submit transaction: ${error}`);
         //res.status(400).json(error);
-        res.status(400).json({response: 'Transaction failed'});
-    }   
+        res.status(400).json({ response: 'Transaction failed' });
+    }
 });
+
+app.get('/api/queryallproducts', async function(req, res) {
+    try {
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup a gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("product");
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try a query type operation (function).
+        // This will be sent to just one peer and the results will be shown.
+        console.log('=> Evaluate Transaction: QueryAllProducts, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('QueryAllProducts');
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        var obj = JSON.parse(result)
+        res.json(obj)
+
+    } catch (error) {
+        console.error(`******** FAILED to run the application: ${error}`);
+    }
+});
+
+app.post('/api/queryhistoryproducts', async function(req, res) {
+
+    var id = req.body.productid;
+
+    try {
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup a gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("product");
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try a query type operation (function).
+        // This will be sent to just one peer and the results will be shown.
+        console.log('=> Evaluate Transaction: Query History Products, function returns all the current assets on the ledger');
+        const result = await contract.evaluateTransaction('QueryHistoryProducts', id);
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
+
+        var obj = JSON.parse(result)
+        res.json(obj)
+
+    } catch (error) {
+        console.error(`******** FAILED to run the application: ${error}`);
+        res.json('');
+    }
+});
+
+app.post('/api/deleteproduct/', async function(req, res) {
+    try {
+        var id = req.body.productid;
+        console.log(id);
+
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("product");
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try to submit a transaction.
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+
+        try {
+            // How about we try a transactions where the executing chaincode throws an error.
+            // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
+            console.log(`=> Submit Transaction: deleteProduct ${id}`);
+            await contract.submitTransaction('DeleteProduct', id);
+            console.log(`=> Transaction has been submitted`);
+        } catch (error) {
+            console.log(`=> Error. ${id} may not exist.`);
+            //res.status(400).json(error);
+            res.status(400).json({ response: 'Transaction failed' })
+        }
+
+        await gateway.disconnect();
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
+
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        //res.status(400).json(error);
+        res.status(400).json({ response: 'Transaction failed' });
+    }
+});
+
 // server start
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);

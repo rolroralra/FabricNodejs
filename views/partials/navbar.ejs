@@ -1,71 +1,46 @@
 <% if(activate=="index" ){ %>
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="./">Home</a></li>
-        <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-        <li role="presentation"><a href="./addstock">Add a stock</a></li>
-        <li role="presentation"><a href="./querystock">Query a stock</a></li>
-        <li role="presentation"><a href="./changeowner">Change owner</a></li>
-        <li role="presentation"><a href="./deletestock">Delete stock</a></li>
-        <li role="presentation"><a href="./pushstock">Push stock</a></li>
+        <li role="presentation"><a href="./queryallmodels">Query all models</a></li>
+        <li role="presentation"><a href="./addmodel">Add a model</a></li>
+        <li role="presentation"><a href="./queryallproducts">Query all products</a></li>
     </ul>
-    <% }else if(activate=="queryallstocks" ){ %>
+    <% }else if(activate=="queryallmodels" ){ %>
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="./">Home</a></li>
-            <li role="presentation" class="active"><a href="#">Query all stocks</a></li>
-            <li role="presentation"><a href="./addstock">Add a stock</a></li>
-            <li role="presentation"><a href="./querystock">Query a stock</a></li>
-            <li role="presentation"><a href="./changeowner">Change owner</a></li>
-            <li role="presentation"><a href="./deletestock">Delete stock</a></li>
-        		<li role="presentation"><a href="./pushstock">Push stock</a></li>
+            <li role="presentation" class="active"><a href="#">Query all models</a></li>
+            <li role="presentation"><a href="./addmodel">Add a model</a></li>
+            <li role="presentation"><a href="./queryallproducts">Query all products</a></li>
         </ul>
-        <% }else if(activate=="addstock" ){ %>
+        <% }else if(activate=="addmodel" ){ %>
             <ul class="nav nav-tabs">
                 <li role="presentation"><a href="./">Home</a></li>
-                <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-                <li role="presentation" class="active"><a href="#">Add a stock</a></li>
-                <li role="presentation"><a href="./querystock">Query a stock</a></li>
-                <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                <li role="presentation"><a href="./deletestock">Delete stock</a></li>
-        				<li role="presentation"><a href="./pushstock">Push stock</a></li>
+                <li role="presentation"><a href="./queryallmodels">Query all models</a></li>
+                <li role="presentation" class="active"><a href="#">Add a model</a></li>
+                <li role="presentation"><a href="./queryallproducts">Query all products</a></li>
             </ul>
-            <% }else if(activate=="querystock" ){ %>
+            <% }else if(activate=="queryallproducts" ){ %>
                 <ul class="nav nav-tabs">
                     <li role="presentation"><a href="./">Home</a></li>
-                    <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-                    <li role="presentation"><a href="./addstock">Add a stock</a></li>
-                    <li role="presentation" class="active"><a href="#">Query a stock</a></li>
-                    <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                    <li role="presentation"><a href="./deletestock">Delete stock</a></li>
-        						<li role="presentation"><a href="./pushstock">Push stock</a></li>
+                    <li role="presentation"><a href="./queryallmodels">Query all models</a></li>
+                    <li role="presentation"><a href="./addmodel">Add a model</a></li>
+                    <li role="presentation" class="active"><a href="#">Query all products</a></li>
                 </ul>
-                <% }else if(activate=="deletestock" ){ %>
+                <% }else if(activate=="pushmodel" ){ %>
                     <ul class="nav nav-tabs">
                         <li role="presentation"><a href="./">Home</a></li>
-                        <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-                        <li role="presentation"><a href="./addstock">Add a stock</a></li>
-                        <li role="presentation"><a href="./querystock">Query a stock</a></li>
-                        <li role="presentation"><a href="./changeowner">Change owner</a></li>
-                        <li role="presentation" class="active"><a href="#">Delete stock</a></li>
-        								<li role="presentation"><a href="./pushstock">Push stock</a></li>
-										</ul>
-									<% }else if(activate=="pushstock" ){ %>
-											<ul class="nav nav-tabs">
-													<li role="presentation"><a href="./">Home</a></li>
-													<li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-													<li role="presentation"><a href="./addstock">Add a stock</a></li>
-													<li role="presentation"><a href="./querystock">Query a stock</a></li>
-													<li role="presentation"><a href="./changeowner">Change owner</a></li>
-                    			<li role="presentation"><a href="./deletestock">Delete stock</a></li>
-													<li role="presentation" class="active"><a href="#">Delete stock</a></li>
-											</ul>
+                        <li role="presentation"><a href="./queryallmodels">Query all models</a></li>
+                        <li role="presentation"><a href="./addmodel">Add a model</a></li>
+                        <li role="presentation"><a href="./querymodel">Query a model</a></li>
+                        <li role="presentation"><a href="./queryallproducts">Query all products</a></li>
+                        <li role="presentation" class="active"><a href="#">Delete model</a></li>
+                    </ul>
                     <% }else{ %>
                         <ul class="nav nav-tabs">
                             <li role="presentation"><a href="./">Home</a></li>
-                            <li role="presentation"><a href="./queryallstocks">Query all stocks</a></li>
-                            <li role="presentation"><a href="./addstock">Add a stock</a></li>
-                            <li role="presentation"><a href="./querystock">Query a stock</a></li>
-                            <li role="presentation" class="active"><a href="#">Change owner</a></li>
-                            <li role="presentation"><a href="./deletestock">Delete stock</a></li>
-        										<li role="presentation"><a href="./pushstock">Push stock</a></li>
+                            <li role="presentation"><a href="./queryallmodels">Query all models</a></li>
+                            <li role="presentation"><a href="./addmodel">Add a model</a></li>
+                            <li role="presentation"><a href="./querymodel">Query a model</a></li>
+                            <li role="presentation" class="active"><a href="#">Query all products</a></li>
                         </ul>
                         <% } %>

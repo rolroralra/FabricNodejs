@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-book-reader"></i>
+        <h1>Welcome!</h1>
+        <p>Query All Models</p>
+        <%- include('partials/navbar') %>
+
+            <button class="btn btn-info">Refresh</button>
+
+            <div id="fabmodelhead">
+                <h2>Model Query Result</h2>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ModelID</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Delete</th>
+                        <th>Push</th>
+                        <th>Pop</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+
+                </tbody>
+            </table>
+            <div id="historyhead">
+                <h2 id="historyheadcontent">Fabmodel Query Result for key</h2>
+            </div>
+            <table class="styled-detail-table" id="tableDetail">
+                <thead>
+                    <tr>
+                        <th>ModelID</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDetailContent">
+
+                </tbody>
+            </table>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function queryAllModels() {
+        $("#fabmodelhead").show();
+        $.get("./api/queryallmodels", function(data, status) {
+
+            html = '';
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+                html += '<td>' + data[i].ID + ' </td>';
+                html += '<td>' + data[i].name + ' </td>';
+                html += '<td>' + data[i].count + ' </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="deleteModel(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="pushModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="popModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+
+                html += '</tr>';
+
+            }
+            $('#tableContent').html(html);
+        });
+    }
+
+    $(document).ready(function() {
+
+        $("#historyhead").hide();
+        $("#tableDetail").hide();
+        // $("#head").hide();
+        $("button").click(() => {
+            queryAllModels();
+        });
+
+        queryAllModels();
+
+    });
+
+    function queryKeyHistory(modelID) {
+
+        // $("#historyhead").show();
+        // $("#tableDetail").show();
+        // $.post("./api/queryhistorymodels", {
+        //         modelid: modelID
+        //     },
+        //     function(data, status) {
+        //         $('#historyheadcontent').text(modelID + " History Query Result");
+        //         html = '';
+
+        //         for (var i = 0; i < data.length; i++) {
+
+        //             html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+        //             if (i == 0) {
+        //                 html += '<td rowspan=' + data.length + '>' + data[i].ID + ' </td>';
+        //             }
+        //             // if (data[i].make == "delete") {
+        //             //     html += '<td colspan="4">' + data[i].make + ' </td>';
+        //             // } else {
+        //             html += '<td>' + data[i].name + ' </td>';
+        //             html += '<td>' + data[i].count + ' </td>';
+
+        //             html += '</tr>';
+        //             // }
+
+
+        //         }
+        //         $('#tableDetailContent').html(html);
+        //     });
+    }
+
+
+    function deleteModel(modelID) {
+
+        $.post("./api/deletemodel", {
+                modelid: modelID
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllModels();
+
+            });
+    }
+
+    function pushModel(modelID, count) {
+
+        $.post("./api/pushmodel", {
+                modelid: modelID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllModels();
+
+            });
+
+    }
+
+    function popModel(modelID, count) {
+
+        $.post("./api/popmodel", {
+                modelid: modelID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllModels();
+
+            });
+
+    }
+</script>

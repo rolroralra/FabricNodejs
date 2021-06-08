@@ -1,8 +1,7 @@
 #!/bin/bash
 
-PROC_HOME_DIR=$(dirname $(realpath $0))
 
-rm -rf ${PROC_HOME_DIR}/wallet
+rm -rf ./wallet
 
 node enrollAdmin.js
 

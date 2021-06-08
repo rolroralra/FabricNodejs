@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-book-reader"></i>
+        <h1>QueryModel Page</h1>
+        <p>Query model!</p>
+        <%- include('partials/navbar') %>
+
+
+            ModelID <input type="text" name="id" /> <br> Maker <input type="text" name="make" /> <br> Model <input type="text" name="model" /> <br> Owner <input type="text" name="owner" /> <br> Count <input type="text" name="count" /> <br>
+            <button class="btn btn-info">Submit</button>
+
+            <div id="fabmodelhead">
+                <h2>Fabmodel Query Result</h2>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ProductID</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+
+                </tbody>
+            </table>
+    </div>
+
+</body>
+<script>
+    $("button").click(function() {
+        var modelid = $('input[name=id]').val();
+        var name = $('input[name=name]').val();
+        var count = $('input[name=count]').val();
+
+
+        $.post("./api/querymodel", {
+            id: modelid,
+            name: name,
+            count: count,
+        }, function(data, status) {
+            html = '';
+            if (data.response == "empty result") {
+                html += '<tr>';
+                html += '<td colspan="3"> Not Found Result</td>';
+                html += '</tr>'
+                $('#tableContent').html(html);
+            }
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                html += '<tr>';
+                html += '<td>' + data[i].ID + ' </td>';
+                html += '<td>' + data[i].name + ' </td>';
+                html += '<td>' + data[i].count + ' </td>';
+                html += '</tr>';
+
+            }
+            $('#tableContent').html(html);
+        });
+    });
+</script>
+
+</html>

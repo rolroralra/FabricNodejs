@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-book-reader"></i>
+        <h1>Welcome!</h1>
+        <p>Query All Products</p>
+        <%- include('partials/navbar') %>
+
+            <button class="btn btn-info">Refresh</button>
+
+            <div id="fabproducthead">
+                <h2>Product Query Result</h2>
+            </div>
+
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ModelID</th>
+                        <th>ModelName</th>
+                        <th>Make</th>
+                        <th>Status</th>
+                        <th>UpdatedAt</th>
+                        <th>Description</th>
+                        <th>삭제</th>
+                        <th>입고</th>
+                        <th>출고</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableContent">
+
+                </tbody>
+            </table>
+            <div id="historyhead">
+                <h2 id="historyheadcontent">Product History Result for key</h2>
+            </div>
+            <table class="styled-detail-table" id="tableDetail">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ModelID</th>
+                        <th>ModelName</th>
+                        <th>Make</th>
+                        <th>Status</th>
+                        <th>UpdatedAt</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDetailContent">
+
+                </tbody>
+            </table>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function queryAllProducts() {
+        $("#fabproducthead").show();
+        $.get("./api/queryallproducts", function(data, status) {
+
+            html = '';
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+                html += '<td>' + data[i].ID + ' </td>';
+                html += '<td>' + data[i].modelID + ' </td>';
+                html += '<td>' + data[i].modelName + ' </td>';
+                html += '<td>' + data[i].make + ' </td>';
+                html += '<td>' + data[i].status + ' </td>';
+                html += '<td>' + data[i].updatedAt + ' </td>';
+                html += '<td>' + data[i].description + ' </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="deleteProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="pushProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="delete.png" width = 15 onclick="popProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '</tr>';
+
+            }
+            $('#tableContent').html(html);
+        });
+    }
+
+    $(document).ready(function() {
+
+        $("#historyhead").hide();
+        $("#tableDetail").hide();
+        // $("#head").hide();
+        $("button").click(() => {
+            queryAllProducts();
+        });
+
+        queryAllProducts();
+
+    });
+
+    function queryKeyHistory(productID) {
+
+        $("#historyhead").show();
+        $("#tableDetail").show();
+        $.post("./api/queryhistoryproducts", {
+                productid: productID
+            },
+            function(data, status) {
+                $('#historyheadcontent').text(productID + " History Query Result");
+                html = '';
+
+                for (var i = 0; i < data.length; i++) {
+
+                    html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
+                    if (i == 0) {
+                        html += '<td rowspan=' + data.length + '>' + data[i].ID + ' </td>';
+                    }
+                    // if (data[i].make == "delete") {
+                    //     html += '<td colspan="4">' + data[i].make + ' </td>';
+                    // } else {
+                    html += '<td>' + data[i].ID + ' </td>';
+                    html += '<td>' + data[i].modelID + ' </td>';
+                    html += '<td>' + data[i].modelName + ' </td>';
+                    html += '<td>' + data[i].make + ' </td>';
+                    html += '<td>' + data[i].status + ' </td>';
+                    html += '<td>' + data[i].updatedAt + ' </td>';
+                    html += '<td>' + data[i].description + ' </td>';
+
+                    html += '</tr>';
+                    // }
+
+
+                }
+                $('#tableDetailContent').html(html);
+            });
+    }
+
+
+    function deleteProduct(productID) {
+
+        $.post("./api/deleteproduct", {
+                productid: productID
+            },
+
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllProducts();
+
+            });
+
+    }
+
+    function pushProduct(productID) {
+
+        $.post("./api/pushproduct", {
+                productid: productID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllProducts();
+
+            });
+
+    }
+
+    function popProduct(productID) {
+
+        $.post("./api/popproduct", {
+                productid: productID,
+                count: count
+            },
+            function(data, status) {
+                if (data.status == 200) {
+                    alert(data.response);
+                }
+                queryAllProducts();
+
+            });
+
+    }
+</script>

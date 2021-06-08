@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-model"></i>
+        <h1>AddModel Page</h1>
+        <p>Add model</p>
+        <%- include('partials/navbar') %>
+
+
+            ModelID <input type="text" name="id" /> <br> Name <input type="text" name="name" /> <br> Count <input type="text" name="count" /> <br>
+            <button class="btn btn-info">Submit</button>
+
+    </div>
+</body>
+<script>
+    $("button").click(function() {
+        var modelid = $('input[name=id]').val();
+        var name = $('input[name=name]').val();
+        var count = $('input[name=count]').val();
+
+
+        $.post("./api/addmodel", {
+            id: modelid,
+            name: name,
+            count: count,
+        }, function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+        });
+    });
+</script>
+
+</html>
