@@ -15,6 +15,7 @@
             <div id="producthead">
                 <h2 id="productheadcontent">Product Create Result</h2>
             </div>
+
             <table class="styled-detail-table" id="tableDetail">
                 <thead>
                     <tr>
@@ -32,15 +33,14 @@
                 </tbody>
             </table>
 
-            <br/>
-            <br/> ProductID <input type="text" name="id" /> <br> ModelID
-            <input type="text" name="modelid" value="<%= modelid %>" /><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
-            <input type="status" name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
+            <label for="id">ProductID:</label> <input type="text" name="id" /> <br>
+            <label for="modelid">ModelID:</label> <input type="text" name="modelid" value="<%= modelid %>" /><br>
+            <label for="modelname">ModelName:</label> <input type="text" name="modelname" /> <br>
+            <label for="make">Make:</label> <input type="text" name="make" /> <br>
+            <label for="status">Status:</label> <input type="status" name="status" /><br>
+            <label for="updatedat">UpdatedAt:</label> <input type="text" name="updatedat" /> <br>
+            <label for="description">Description:</label> <input type="text" name="description" /> <br>
             <button class="btn btn-info">Submit</button>
-
-
-            </table>
-
 
     </div>
 </body>

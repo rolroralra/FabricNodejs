@@ -1,13 +1,13 @@
-.container{
-    text-align: center; 
+.container {
+    text-align: center;
     margin-top: 30px;
 }
 
-.nav{
+.nav {
     margin-bottom: 50px;
 }
 
-input{
+input {
     margin-left: 30px;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -15,14 +15,20 @@ input{
     width: 30%;
 }
 
-i{
+label {
+    width: 20%;
+    text-align: right;
+}
+
+i {
     font-size: 50px;
 }
 
-button{
-    margin-top: 30px; 
+button {
+    margin-top: 30px;
     padding: 10px 40px;
 }
+
 .styled-table,
 .styled-detail-table {
     border-collapse: collapse;
@@ -34,30 +40,33 @@ button{
     margin-left: auto;
     margin-right: auto;
     width: 70%;
-    
 }
+
 .styled-table thead tr {
     background-color: #009879;
     color: #ffffff;
     text-align: left;
 }
+
 .styled-detail-table thead tr {
     background-color: #5286ca;
     color: #ffffff;
     text-align: left;
 }
+
 .styled-table th,
-.styled-table td{
+.styled-table td {
     padding: 12px 15px;
     text-align: center;
 }
 
-.styled-detail-table th, 
-.styled-detail-table td{
+.styled-detail-table th,
+.styled-detail-table td {
     width: 20%;
     padding: 12px 15px;
     text-align: center;
 }
+
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
 }
@@ -69,6 +78,7 @@ button{
 .styled-table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
 }
+
 .styled-table tbody tr.active-row {
     font-weight: bold;
     color: #009879;
