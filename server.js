@@ -1154,6 +1154,112 @@ app.post('/api/queryproduct', async function(req, res) {
     }
 });
 
+app.post('/api/updateproduct/', async function(req, res) {
+    try {
+        var productid = req.body.productid;
+        var modelid = req.body.modelid;
+        var status = req.body.status;
+        var updatedat = req.body.updatedat;
+
+        console.log(productid);
+        console.log(modelid);
+        console.log(status);
+        console.log(updatedat);
+
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("model");
+        console.log('=> Contract obtained');
+
+        const contract2 = network.getContract("product");
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Let's try to submit a transaction.
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+
+        try {
+            // How about we try a transactions where the executing chaincode throws an error.
+            // Notice how the submitTransaction will throw an error containing the error thrown by the chaincode.
+
+            var chaincodeMethodName = "";
+            if (status == "2") {
+                chaincodeMethodName = "PushModel";
+            } else if (status == "3") {
+                chaincodeMethodName = "PopModel";
+            } else {
+                res.status(400).json({ response: 'Transaction failed' })
+                return
+            }
+
+            console.log(`=> Submit Transaction: ${chaincodeMethodName} ${modelid} 1`);
+            await contract.submitTransaction(chaincodeMethodName, modelid, 1);
+            console.log(`=> Transaction has been submitted`);
+
+            console.log(`=> Submit Transaction: UpdateProduct ${productid} ${status} ${updatedat}`);
+            await contract2.submitTransaction('UpdateProduct', productid, status, updatedat);
+            console.log(`=> Transaction has been submitted`);
+
+
+        } catch (error) {
+            // console.log(`=> Error. ${id} may not exist.`);
+            //res.status(400).json(error);
+            res.status(400).json({ response: 'Transaction failed' })
+        }
+
+        await gateway.disconnect();
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
+
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        //res.status(400).json(error);
+        res.status(400).json({ response: 'Transaction failed' });
+    }
+});
 
 // server start
 app.listen(PORT, HOST);

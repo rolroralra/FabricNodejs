@@ -42,6 +42,8 @@
                 alert(data.response);
             }
 
+            console.log(data)
+
             $('input[name=id]').val(`MODEL-${String(data.length + 1).padStart(5, '0')}`)
         });
 

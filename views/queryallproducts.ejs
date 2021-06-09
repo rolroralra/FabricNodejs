@@ -119,14 +119,14 @@
                     html += '<tr onclick="queryKeyHistory(\'' + data[i].ID + '\')">';
                     if (i == 0) {
                         html += '<td rowspan=' + data.length + '>' + data[i].ID + ' </td>';
+                        html += '<td rowspan=' + data.length + '>' + data[i].modelID + ' </td>';
+                        html += '<td rowspan=' + data.length + '>' + data[i].modelName + ' </td>';
+                        html += '<td rowspan=' + data.length + '>' + data[i].make + ' </td>';
                     }
                     // if (data[i].make == "delete") {
                     //     html += '<td colspan="4">' + data[i].make + ' </td>';
                     // } else {
                     // html += '<td>' + data[i].ID + ' </td>';
-                    html += '<td>' + data[i].modelID + ' </td>';
-                    html += '<td>' + data[i].modelName + ' </td>';
-                    html += '<td>' + data[i].make + ' </td>';
                     html += '<td>' + data[i].status + ' </td>';
                     html += '<td>' + data[i].updatedAt + ' </td>';
                     html += '<td>' + data[i].description + ' </td>';
@@ -142,7 +142,6 @@
 
 
     function deleteProduct(productID) {
-
         $.post("./api/deleteproduct", {
                 productid: productID
             },
@@ -153,39 +152,68 @@
                 }
                 queryAllProducts();
 
+                $("#historyhead").hide();
+                $("#tableDetail").hide();
+
             });
 
     }
 
     function pushProduct(productID) {
+        $.post("./api/queryproduct", {
+            id: productID
+        }, function(data, status) {
+            var modelID = data[0].modelID;
 
-        $.post("./api/pushproduct", {
-                productid: productID,
-                count: count
-            },
-            function(data, status) {
-                if (data.status == 200) {
-                    alert(data.response);
-                }
-                queryAllProducts();
+            if (data[0].status != 1) {
+                alert(`Product Status is already ${data[0].status}`)
+                return
+            }
 
-            });
+            $.post("./api/updateproduct", {
+                    productid: productID,
+                    modelid: modelID,
+                    status: 2,
+                    updatedat: new Date().toLocaleString()
+                },
+                function(data, status) {
+                    if (data.status == 200) {
+                        alert(data.response);
+                    }
+                    queryAllProducts();
+                    queryKeyHistory(productID);
 
+                });
+        });
     }
 
     function popProduct(productID) {
 
-        $.post("./api/popproduct", {
-                productid: productID,
-                count: count
-            },
-            function(data, status) {
-                if (data.status == 200) {
-                    alert(data.response);
-                }
-                queryAllProducts();
+        $.post("./api/queryproduct", {
+            id: productID
+        }, function(data, status) {
+            var modelID = data[0].modelID;
 
-            });
+            if (data[0].status != 2) {
+                alert(`Product Status is already ${data[0].status}`)
+                return
+            }
+
+            $.post("./api/updateproduct", {
+                    productid: productID,
+                    modelid: modelID,
+                    status: 3,
+                    updatedat: new Date().toLocaleString()
+                },
+                function(data, status) {
+                    if (data.status == 200) {
+                        alert(data.response);
+                    }
+                    queryAllProducts();
+                    queryKeyHistory(productID);
+
+                });
+        });
 
     }
 </script>

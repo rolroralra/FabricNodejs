@@ -12,8 +12,8 @@
         <p>Add product</p>
         <%- include('partials/navbar') %>
 
-            ProductID <input type="text" name="id" /> <br> ModelID <select name="modelid"> </select>
-            <!--<input type="text" name="modelid" value="<%= modelid %>" />--><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
+            ProductID <input type="text" name="id" /> <br> ModelID
+            <input type="text" name="modelid" value="<%= modelid %>" /><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
             <input type="status" name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
             <button class="btn btn-info">Submit</button>
 
@@ -47,6 +47,8 @@
         $("#producthead").hide();
         $("#tableDetail").hide();
 
+        $('input[name=id]').val("PRODUCT-00001")
+
         $.post("./api/querymodel", {
             id: $('input[name=modelid]').val()
         }, function(data, status) {
@@ -54,26 +56,16 @@
                 alert(data.response);
             }
 
+            $('input[name=modelid]').val(data[0].ID);
             $('input[name=modelname]').val(data[0].name);
         });
-
-        $.get("./api/queryallmodels", function(data, status) {
-            if (data.status == 200) {
-                alert(data.response);
-            }
-
-            var html = '';
-            for (var i = 0; i < data.length; i++) {
-                html += '<option value="' + data[i].ID + '">' + data[i].ID + '</option>'
-            }
-
-            $('select[name=modelid]').html(html)
-        })
 
         $.get("./api/queryallproducts", function(data, status) {
             if (data.status == 200) {
                 alert(data.response);
             }
+
+            console.log(data)
 
             $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
         });
@@ -86,26 +78,38 @@
     });
 
     $("button").click(function() {
-        $.get("./api/queryallproducts", function(data, status) {
-            if (data.status == 200) {
-                alert(data.response);
-            }
+        // $.get("./api/queryallproducts", function(data, status) {
+        //     if (data.status == 200) {
+        //         alert(data.response);
+        //     }
 
-            $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
-        });
+        //     if (data.length == 0) {
+        //         $('input[name=id]').val("PRODUCT-00001")
+        //     } else {
+        //         $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
+        //     }
+        // });
 
         $('input[name=updatedat]').val(new Date().toLocaleString());
 
         $('input[name=id]').prop('readonly', true);
-        $('select[name=modelid]').prop('readonly', true);
+        $('input[name=modelid]').prop('readonly', true);
         $('input[name=modelname]').prop('readonly', true);
         $('input[name=make]').prop('readonly', true);
         $('input[name=status]').prop('readonly', true);
         $('input[name=updatedat]').prop('readonly', true);
         $('input[name=description]').prop('readonly', true);
 
+        $('input[name=id]').prop('disable', true);
+        $('input[name=modelid]').prop('disable', true);
+        $('input[name=modelname]').prop('disable', true);
+        $('input[name=make]').prop('disable', true);
+        $('input[name=status]').prop('disable', true);
+        $('input[name=updatedat]').prop('disable', true);
+        $('input[name=description]').prop('disable', true);
+
         var productid = $('input[name=id]').val();
-        var modelid = $('select[name=modelid]').val();
+        var modelid = $('input[name=modelid]').val();
         var modelname = $('input[name=modelname]').val();
         var make = $('input[name=make]').val();
         var status = $('input[name=status]').val();
