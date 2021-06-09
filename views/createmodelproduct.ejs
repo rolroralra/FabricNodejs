@@ -12,17 +12,39 @@
         <p>Add product</p>
         <%- include('partials/navbar') %>
 
-            ProductID <input type="text" name="id" /> <br> ModelID <input type="text" name="modelid" value="<%= modelid %>" /> <br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status <input type="status"
-                name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
-
-
+            ProductID <input type="text" name="id" /> <br> ModelID <select name="modelid"> </select>
+            <!--<input type="text" name="modelid" value="<%= modelid %>" />--><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
+            <input type="status" name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
             <button class="btn btn-info">Submit</button>
+
+            <br/><br/>
+
+            </table>
+            <div id="producthead">
+                <h2 id="productheadcontent">Product Create Result</h2>
+            </div>
+            <table class="styled-detail-table" id="tableDetail">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Model ID</th>
+                        <th>Model Name</th>
+                        <th>Make</th>
+                        <th>Status</th>
+                        <th>UpdatedAt</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDetailContent">
+
+                </tbody>
+            </table>
 
     </div>
 </body>
 <script>
     $(document).ready(function() {
-        $("#modelhead").hide();
+        $("#producthead").hide();
         $("#tableDetail").hide();
 
         $.post("./api/querymodel", {
@@ -34,6 +56,19 @@
 
             $('input[name=modelname]').val(data[0].name);
         });
+
+        $.get("./api/queryallmodels", function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                html += '<option value="' + data[i].ID + '">' + data[i].ID + '</option>'
+            }
+
+            $('select[name=modelid]').html(html)
+        })
 
         $.get("./api/queryallproducts", function(data, status) {
             if (data.status == 200) {
@@ -59,13 +94,24 @@
             $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
         });
 
+        $('input[name=updatedat]').val(new Date().toLocaleString());
+
+        $('input[name=id]').prop('readonly', true);
+        $('select[name=modelid]').prop('readonly', true);
+        $('input[name=modelname]').prop('readonly', true);
+        $('input[name=make]').prop('readonly', true);
+        $('input[name=status]').prop('readonly', true);
+        $('input[name=updatedat]').prop('readonly', true);
+        $('input[name=description]').prop('readonly', true);
+
         var productid = $('input[name=id]').val();
-        var modelid = $('input[name=modelid]').val();
+        var modelid = $('select[name=modelid]').val();
         var modelname = $('input[name=modelname]').val();
         var make = $('input[name=make]').val();
         var status = $('input[name=status]').val();
         var updatedat = $('input[name=updatedat]').val();
         var description = $('input[name=description]').val();
+
 
         $.post("./api/addproduct", {
             id: productid,
@@ -80,7 +126,27 @@
                 alert(data.response);
             }
 
+            $.post("./api/queryproduct", {
+                id: productid
+            }, function(data, status) {
+                $('#productheadcontent').text(data[0].ID + " Product Create Result");
+                html = '';
 
+                html += '<tr>';
+                html += '<td>' + data[0].ID + ' </td>';
+                html += '<td>' + data[0].modelID + ' </td>';
+                html += '<td>' + data[0].modelName + ' </td>';
+                html += '<td>' + data[0].make + ' </td>';
+                html += '<td>' + data[0].status + ' </td>';
+                html += '<td>' + data[0].updatedAt + ' </td>';
+                html += '<td>' + data[0].description + ' </td>';
+
+                html += '</tr>';
+                $('#tableDetailContent').html(html);
+
+                $("#producthead").show();
+                $("#tableDetail").show();
+            })
 
         });
     });

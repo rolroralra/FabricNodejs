@@ -1049,6 +1049,111 @@ app.post('/api/addproduct/', async function(req, res) {
 
 });
 
+app.post('/api/queryproduct', async function(req, res) {
+    try {
+        var id = req.body.id;
+        var modelID = req.body.modelID;
+        var modelName = req.body.modelName;
+        var make = req.body.make;
+        var status = req.body.status;
+        var updatedAt = req.body.updatedAt;
+        var description = req.body.description;
+
+
+        // make queryString
+        var queryStringObject = new Object();
+        queryStringObject.selector = new Object();
+        if (id != "") {
+            queryStringObject.selector.ID = id;
+        }
+        if (modelID != "") {
+            queryStringObject.selector.modelID = modelID;
+        }
+        if (modelName != "") {
+            queryStringObject.selector.modelName = modelName;
+        }
+        if (make != "") {
+            queryStringObject.selector.make = make;
+        }
+        if (status != "") {
+            queryStringObject.selector.status = status;
+        }
+        if (updatedAt != "") {
+            queryStringObject.selector.updatedAt = updatedAt;
+        }
+        if (description != "") {
+            queryStringObject.selector.description = description;
+        }
+
+        var queryString = JSON.stringify(queryStringObject)
+        console.log(queryString);
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("product");
+        console.log('=> Contract obtained');
+
+
+        // Invoke the chaincode function!!!
+        // Let's try a query type operation (function).
+        // This will be sent to just one peer and the results will be shown.
+        console.log(`=> Evaluate Transaction: QueryProduct, function returns the attributes`);
+        const result = await contract.evaluateTransaction('QueryProductCouchDB', queryString);
+        if (result.toString() == '') {
+            res.json({ response: "empty result" })
+        }
+        console.log(`=> Transaction has been evaluated, result is: ${result.toString()}`);
+        var obj = JSON.parse(result)
+        res.json(obj)
+    } catch (error) {
+        console.error(`******** FAILED to run the application: ${error}`);
+        res.status(400).json({ response: 'Transaction failed', status: 400 });
+
+    }
+});
+
 
 // server start
 app.listen(PORT, HOST);
