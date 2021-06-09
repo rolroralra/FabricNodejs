@@ -141,4 +141,6 @@ temp/
 .history
 .ionide
 
+wallet/
+
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode
