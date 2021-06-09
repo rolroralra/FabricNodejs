@@ -1160,11 +1160,7 @@ app.post('/api/updateproduct/', async function(req, res) {
         var modelid = req.body.modelid;
         var status = req.body.status;
         var updatedat = req.body.updatedat;
-
-        console.log(productid);
-        console.log(modelid);
-        console.log(status);
-        console.log(updatedat);
+        var description = req.body.description;
 
         // Build an in memory object with the network configuration (also known as a connection profile).
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -1240,8 +1236,8 @@ app.post('/api/updateproduct/', async function(req, res) {
             await contract.submitTransaction(chaincodeMethodName, modelid, 1);
             console.log(`=> Transaction has been submitted`);
 
-            console.log(`=> Submit Transaction: UpdateProduct ${productid} ${status} ${updatedat}`);
-            await contract2.submitTransaction('UpdateProduct', productid, status, updatedat);
+            console.log(`=> Submit Transaction: UpdateProduct ${productid} ${status} ${updatedat} ${description}`);
+            await contract2.submitTransaction('UpdateProduct', productid, status, updatedat, description);
             console.log(`=> Transaction has been submitted`);
 
 

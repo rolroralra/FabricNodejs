@@ -69,9 +69,9 @@
                 html += '<td>' + data[i].name + ' </td>';
                 html += '<td>' + data[i].count + ' </td>';
                 html += '<td>  <img src="delete.png" width = 15 onclick="deleteModel(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
-                html += '<td>  <img src="delete.png" width = 15 onclick="pushModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
-                html += '<td>  <img src="delete.png" width = 15 onclick="popModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
-                html += '<td>  <a href="./createmodelproduct?modelid=' + data[i].ID + '"><img src="delete.png" width = 15 style="cursor:pointer; "/></a></td>';
+                html += '<td>  <img src="inbound.png" width = 20 onclick="pushModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="outbound.png" width = 35 onclick="popModel(\'' + data[i].ID + '\',1)" style="cursor:pointer;"> </td>';
+                html += '<td>  <a href="./createmodelproduct?modelid=' + data[i].ID + '"><img src="create.png" width = 15 style="cursor:pointer; "/></a></td>';
 
                 html += '</tr>';
 

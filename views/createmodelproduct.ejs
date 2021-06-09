@@ -12,14 +12,6 @@
         <p>Add product</p>
         <%- include('partials/navbar') %>
 
-            ProductID <input type="text" name="id" /> <br> ModelID
-            <input type="text" name="modelid" value="<%= modelid %>" /><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
-            <input type="status" name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
-            <button class="btn btn-info">Submit</button>
-
-            <br/><br/>
-
-            </table>
             <div id="producthead">
                 <h2 id="productheadcontent">Product Create Result</h2>
             </div>
@@ -39,6 +31,16 @@
 
                 </tbody>
             </table>
+
+            <br/>
+            <br/> ProductID <input type="text" name="id" /> <br> ModelID
+            <input type="text" name="modelid" value="<%= modelid %>" /><br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status
+            <input type="status" name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
+            <button class="btn btn-info">Submit</button>
+
+
+            </table>
+
 
     </div>
 </body>
@@ -73,7 +75,7 @@
         $('input[name=make]').val("SAMSUNG");
         $('input[name=status]').val(1);
         $('input[name=updatedat]').val(new Date().toLocaleString());
-        $('input[name=description]').val("제품 생산~");
+        $('input[name=description]').val("생산 완료");
 
     });
 

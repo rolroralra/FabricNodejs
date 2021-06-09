@@ -77,12 +77,12 @@
                 html += '<td>' + data[i].modelID + ' </td>';
                 html += '<td>' + data[i].modelName + ' </td>';
                 html += '<td>' + data[i].make + ' </td>';
-                html += '<td>' + data[i].status + ' </td>';
+                html += '<td>' + statusString(data[i].status) + ' </td>';
                 html += '<td>' + data[i].updatedAt + ' </td>';
                 html += '<td>' + data[i].description + ' </td>';
                 html += '<td>  <img src="delete.png" width = 15 onclick="deleteProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
-                html += '<td>  <img src="delete.png" width = 15 onclick="pushProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
-                html += '<td>  <img src="delete.png" width = 15 onclick="popProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="inbound.png" width = 20 onclick="pushProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
+                html += '<td>  <img src="outbound.png" width = 35 onclick="popProduct(\'' + data[i].ID + '\')" style="cursor:pointer;"> </td>';
                 html += '</tr>';
 
             }
@@ -127,7 +127,7 @@
                     //     html += '<td colspan="4">' + data[i].make + ' </td>';
                     // } else {
                     // html += '<td>' + data[i].ID + ' </td>';
-                    html += '<td>' + data[i].status + ' </td>';
+                    html += '<td>' + statusString(data[i].status) + ' </td>';
                     html += '<td>' + data[i].updatedAt + ' </td>';
                     html += '<td>' + data[i].description + ' </td>';
 
@@ -174,7 +174,8 @@
                     productid: productID,
                     modelid: modelID,
                     status: 2,
-                    updatedat: new Date().toLocaleString()
+                    updatedat: new Date().toLocaleString(),
+                    description: "입고 완료",
                 },
                 function(data, status) {
                     if (data.status == 200) {
@@ -203,7 +204,8 @@
                     productid: productID,
                     modelid: modelID,
                     status: 3,
-                    updatedat: new Date().toLocaleString()
+                    updatedat: new Date().toLocaleString(),
+                    description: "출고 완료",
                 },
                 function(data, status) {
                     if (data.status == 200) {
@@ -215,5 +217,19 @@
                 });
         });
 
+    }
+
+    function statusString(status) {
+        switch (status) {
+            case 1:
+                return "PRODUCED"
+                break;
+            case 2:
+                return "INBOUND_SHIPPING"
+                break;
+            case 3:
+                return "OUTBOUNT_SHIPPING"
+                break;
+        }
     }
 </script>

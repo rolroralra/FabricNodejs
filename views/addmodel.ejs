@@ -37,6 +37,11 @@
 </body>
 <script>
     $(document).ready(function() {
+        $("#modelhead").hide();
+        $("#tableDetail").hide();
+
+        $('input[name=id]').val("MODEL-00001")
+
         $.get("./api/queryallmodels", function(data, status) {
             if (data.status == 200) {
                 alert(data.response);
