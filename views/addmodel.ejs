@@ -16,9 +16,38 @@
             ModelID <input type="text" name="id" /> <br> Name <input type="text" name="name" /> <br> Count <input type="text" name="count" /> <br>
             <button class="btn btn-info">Submit</button>
 
+            </table>
+            <div id="modelhead">
+                <h2 id="modelheadcontent">Model Result</h2>
+            </div>
+            <table class="styled-detail-table" id="tableDetail">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDetailContent">
+
+                </tbody>
+            </table>
+
     </div>
 </body>
 <script>
+    $(document).ready(function() {
+        $.get("./api/queryallmodels", function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+            $('input[name=id]').val(`MODEL-${String(data.length + 1).padStart(5, '0')}`)
+        });
+
+        $('input[name=count]').val(0);
+    });
+
     $("button").click(function() {
         var modelid = $('input[name=id]').val();
         var name = $('input[name=name]').val();
@@ -34,6 +63,23 @@
                 alert(data.response);
             }
 
+            $("#modelead").show();
+            $("#tableDetail").show();
+
+            $.post("./api/querymodel", {
+                id: modelid
+            }, function(data, status) {
+                $('#modelheadcontent').text(data[0].ID + " Model Create Result");
+                html = '';
+
+                html += '<tr>';
+                html += '<td>' + data[0].ID + ' </td>';
+                html += '<td>' + data[0].name + ' </td>';
+                html += '<td>' + data[0].count + ' </td>';
+
+                html += '</tr>';
+                $('#tableDetailContent').html(html);
+            })
         });
     });
 </script>

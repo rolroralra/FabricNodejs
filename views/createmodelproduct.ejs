@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container">
+        <i class="fas fa-product"></i>
+        <h1>AddProduct Page</h1>
+        <p>Add product</p>
+        <%- include('partials/navbar') %>
+
+            ProductID <input type="text" name="id" /> <br> ModelID <input type="text" name="modelid" value="<%= modelid %>" /> <br> ModelName <input type="text" name="modelname" /> <br> Make <input type="text" name="make" /> <br> Status <input type="status"
+                name="status" /><br> UpdatedAt <input type="text" name="updatedat" /> <br> Description <input type="text" name="description" /> <br>
+
+
+            <button class="btn btn-info">Submit</button>
+
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        $("#modelhead").hide();
+        $("#tableDetail").hide();
+
+        $.post("./api/querymodel", {
+            id: $('input[name=modelid]').val()
+        }, function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+            $('input[name=modelname]').val(data[0].name);
+        });
+
+        $.get("./api/queryallproducts", function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+            $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
+        });
+
+        $('input[name=make]').val("SAMSUNG");
+        $('input[name=status]').val(1);
+        $('input[name=updatedat]').val(new Date().toLocaleString());
+        $('input[name=description]').val("제품 생산~");
+
+    });
+
+    $("button").click(function() {
+        $.get("./api/queryallproducts", function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+            $('input[name=id]').val(`PRODUCT-${String(data.length + 1).padStart(5, '0')}`)
+        });
+
+        var productid = $('input[name=id]').val();
+        var modelid = $('input[name=modelid]').val();
+        var modelname = $('input[name=modelname]').val();
+        var make = $('input[name=make]').val();
+        var status = $('input[name=status]').val();
+        var updatedat = $('input[name=updatedat]').val();
+        var description = $('input[name=description]').val();
+
+        $.post("./api/addproduct", {
+            id: productid,
+            modelid: modelid,
+            modelname: modelname,
+            make: make,
+            status: status,
+            updatedat: updatedat,
+            description: description
+        }, function(data, status) {
+            if (data.status == 200) {
+                alert(data.response);
+            }
+
+
+
+        });
+    });
+</script>
+
+</html>

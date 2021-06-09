@@ -69,6 +69,10 @@ app.get('/deletemodel', function(req, res) {
 app.get('/pushmodel', function(req, res) {
     res.render('pushmodel', { title: "Push Model", activate: "pushmodel" });
 });
+app.get('/createmodelproduct', function(req, res) {
+    res.render('createmodelproduct', { title: "Create Model Product", activate: "createmodelproduct", modelid: req.query.modelid });
+});
+
 
 app.post('/api/initledger/', async function(req, res) {
     try {
@@ -206,13 +210,9 @@ app.get('/api/queryallmodels', async function(req, res) {
 
 app.post('/api/querymodel', async function(req, res) {
     try {
-
         var id = req.body.id;
-        var make = req.body.make;
-        var model = req.body.model;
+        var name = req.body.name;
         var count = req.body.count;
-        var owner = req.body.owner;
-
 
         // make queryString
         var queryStringObject = new Object();
@@ -220,17 +220,11 @@ app.post('/api/querymodel', async function(req, res) {
         if (id != "") {
             queryStringObject.selector.ID = id;
         }
-        if (make != "") {
-            queryStringObject.selector.make = make;
-        }
-        if (model != "") {
-            queryStringObject.selector.model = model;
+        if (name != "") {
+            queryStringObject.selector.name = name;
         }
         if (count != "") {
             queryStringObject.selector.count = count;
-        }
-        if (owner != "") {
-            queryStringObject.selector.owner = owner;
         }
         var queryString = JSON.stringify(queryStringObject)
         console.log(queryString);
@@ -279,7 +273,7 @@ app.post('/api/querymodel', async function(req, res) {
         console.log('=> Channel obtained');
 
         // Get the contract object from the network.
-        const contract = network.getContract(chaincodeName);
+        const contract = network.getContract("model");
         console.log('=> Contract obtained');
 
 
@@ -976,6 +970,85 @@ app.post('/api/deleteproduct/', async function(req, res) {
         res.status(400).json({ response: 'Transaction failed' });
     }
 });
+
+app.post('/api/addproduct/', async function(req, res) {
+    try {
+
+        var id = req.body.id;
+        var modelid = req.body.modelid;
+        var modelname = req.body.modelname;
+        var make = req.body.make;
+        var status = req.body.status;
+        var updatedat = req.body.updatedat;
+        var description = req.body.description;
+
+        // Build an in memory object with the network configuration (also known as a connection profile).
+        const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+        const fileExists = fs.existsSync(ccpPath);
+        if (!fileExists) {
+            throw new Error(`no such file or directory: ${ccpPath}`);
+        }
+        const contents = fs.readFileSync(ccpPath, 'utf8');
+        const ccp = JSON.parse(contents);
+        console.log(`\n=> Loaded the network configuration located at ${ccpPath}`);
+
+        // Prepare the identity from the wallet.
+        let wallet;
+        if (walletPath) {
+            wallet = await Wallets.newFileSystemWallet(walletPath);
+            console.log(`=> Found the file system wallet at ${walletPath}`);
+        } else {
+            wallet = await Wallets.newInMemoryWallet();
+            console.log('=> Found the in-memory wallet');
+        }
+
+        // Check to see if we've already enrolled the user.
+        const userIdentity = await wallet.get(org1UserId);
+        if (!userIdentity) {
+            console.log(`An identity for the user ${org1UserId} does not exist in the wallet`);
+            return;
+        }
+        console.log(`=> The user is ${org1UserId}`);
+
+        // Setup the gateway object.
+        // The user will now be able to create connections to the fabric network and be able to
+        // submit transactions and query. All transactions submitted by this gateway will be
+        // signed by this user using the credentials stored in the wallet.
+        const gateway = new Gateway();
+        await gateway.connect(ccp, {
+            wallet,
+            identity: org1UserId,
+            discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+        });
+        console.log(`=> Gateway set up`);
+
+        // Build a network object based on the channel where the smart contract is deployed.
+        const network = await gateway.getNetwork(channelName);
+        console.log('=> Channel obtained');
+
+        // Get the contract object from the network.
+        const contract = network.getContract("product");
+        console.log('=> Contract obtained');
+
+        // Invoke the chaincode function!!!
+        // Now let's try to submit a transaction.
+        // This will be sent to both peers and if both peers endorse the transaction, the endorsed proposal will be sent
+        // to the orderer to be committed by each of the peer's to the channel ledger.
+        console.log('=> Submit Transaction: AddProduct, adds new product with arguments');
+
+        await contract.submitTransaction('AddProduct', id, modelid, modelname, make, status, updatedat, description);
+        console.log('=> Transaction has been submitted');
+        await gateway.disconnect();
+        res.status(200).json({ response: 'Transaction has been submitted', status: 200 });
+
+
+    } catch (error) {
+        console.error(`Failed to submit transaction: ${error}`);
+        res.status(400).json({ response: 'Transaction failed', status: 400 });
+    }
+
+});
+
 
 // server start
 app.listen(PORT, HOST);
