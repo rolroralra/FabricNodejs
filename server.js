@@ -26,7 +26,12 @@ function prettyJSONString(inputString) {
     return JSON.stringify(JSON.parse(inputString), null, 2);
 }
 
-app.use(bodyParser.urlencoded({ extended: false }));
+var favicon = require('serve-favicon');
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+출처: https: //askforyou.tistory.com/37 [일상과 개발]
+
+    app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ejs view template

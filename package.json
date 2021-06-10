@@ -16,7 +16,8 @@
     "express": "^4.17.1",
     "fabric-ca-client": "^2.2.0",
     "fabric-network": "^2.2.0",
-    "grpc": "1.24.3"
+    "grpc": "1.24.3",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
